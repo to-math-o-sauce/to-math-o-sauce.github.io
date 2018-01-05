@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css?family=Lato");
+body, html {
+  height: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  font-family: Lato;
+  background: linear-gradient(to bottom right, #FFAD25, #BA68C8);
+  background-attachment: fixed;
+}
+
+th, td {
+  border-width: 0px;
+  padding: 4px;
+}
+
+th {
+  color: white;
+}
+
+table {
+  margin: auto;
+  border-spacing: 0;
+  border-radius: 10px;
+  width: 80vw;
+  margin-top: 7px;
+}
+table tbody tr:nth-child(even) {
+  background-color: #E0E0E0;
+}
+table tbody tr:nth-child(odd) {
+  background-color: white;
+}
+table tbody tr td:first-child {
+  border-left: 1px solid #006400;
+}
+table tbody tr td:last-child {
+  border-right: 1px solid #006400;
+}
+table tbody tr:first-child th {
+  background: #006400;
+}
+table tbody tr:first-child th:first-child {
+  border-radius: 10px 0 0 0;
+}
+table tbody tr:first-child th:last-child {
+  border-radius: 0 10px 0 0;
+}
+table tbody tr:last-child td {
+  border-bottom: 1px solid #006400;
+}
+table tbody tr:last-child .pos {
+  border-radius: 0 0 0 10px;
+}
+table tbody tr:last-child .all {
+  border-radius: 0 0 10px 0;
+}
+table .pos, table .all, table .last {
+  text-align: center;
+}
+
+img {
+  width: 30px;
+}
+
+img, .name > a > div {
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.name > a > div {
+  margin-left: 5px;
+  color: black;
+}
+.name > a > div:hover {
+  color: #555555;
+}
+
+#title {
+  background: #006400;
+  color: white;
+  width: 80vw;
+  text-align: center;
+  margin: auto;
+  font-size: 35px;
+  border-radius: 10px;
+  margin-top: 7px;
+  padding: 20px 0 20px;
+}
+
+#all, #past, #showmore {
+  cursor: pointer;
+}
+
+#showmore {
+  background: #006400;
+  color: white;
+  width: 80vw;
+  text-align: center;
+  margin: auto;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  border-radius: 10px;
+}

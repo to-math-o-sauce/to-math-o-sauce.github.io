@@ -1,0 +1,118 @@
+// taken from https://www.w3schools.com/xml/tryit.asp?filename=tryxml_httprequest
+
+function fetchData(obj, link, callback) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(obj,this.responseText)
+        }
+    };
+    xhttp.open("GET", link, true);
+    xhttp.send();
+}
+
+function MyRow(props){
+    return  (<tr className='MyRow'>
+                <td className='pos'>
+                    {props.pos}
+                </td>
+                <td className='name'>
+                    <a href={'https://www.freecodecamp.org/'+props.name}>
+                        <img src={props.pic} />
+                        <div>{props.name}</div>
+                    </a>
+                </td>
+                <td className='last'>
+                    {props.last}
+                </td>
+                <td className='all'>
+                    {props.all}
+                </td>
+            </tr>)
+           
+}
+
+function toArr(b,prop){
+    let c = b.slice(1,-1)
+    if(typeof c === 'string'){
+        return c.split(/,(?={)/).map(x=>JSON.parse(x)).sort((x,y)=>y[prop]-x[prop])
+    } 
+    return ''
+}
+
+class MyTable extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            alltime: {data:''},
+            last100: {data:''},
+            stati:[true,false],
+            show: 10,
+            active: false,
+            display: [],
+        }
+        this.showMore = this.showMore.bind(this)
+        this.past = this.past.bind(this)
+        this.all = this.all.bind(this)
+    }
+    
+    componentDidMount() {
+        fetchData(this,'https://fcctop100.herokuapp.com/api/fccusers/top/alltime' , function(obj, info){
+            obj.setState({alltime: toArr(info,'alltime')})
+        })
+        fetchData(this, 'https://fcctop100.herokuapp.com/api/fccusers/top/recent', function(obj, info){
+            obj.setState({active: true, display: toArr(info,'recent'), last100: toArr(info,'recent')})
+        })
+    }
+    
+    genRows(){
+        return this.state.display.slice(0,this.state.show).map((user,i) => <MyRow key={i} pos={i+1} pic={user.img} name={user.username} last={user.recent} all={user.alltime} />)
+    }
+                                                            
+    showMore(){
+        console.log(this.state.show)
+        if(this.state.show<100 && this.state.active === true){
+            this.setState({show: this.state.show + 10})
+        }
+    }
+        
+    past(){
+        this.setState({display: this.state.last100, stati:[true,false]})
+    }
+    
+    all(){
+        this.setState({display: this.state.alltime, stati:[false,true]})
+    }
+        
+    handleBg(i){
+        if(this.state.stati[i] === true){
+            return {backgroundColor: '#007E00'}
+        } else {
+            return {backgroundColor: '#006400'}
+        }
+    }
+                                                               
+    render(){
+        return  <div id="container">
+                    <div id="title">
+                        FreeCodeCamp leaderboard
+                    </div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>#</th>
+                                <th>Camper Name</th>
+                                <th id="past" onClick={this.past} style={this.handleBg(0)}>Points in past 30 days</th> 
+                                <th id="all" onClick={this.all} style={this.handleBg(1)}>All time points</th>
+                            </tr>
+                            {this.genRows()}
+                        </tbody>
+                    </table>
+                    <div id="showmore" onClick={()=>this.showMore()}>
+                        Show More
+                    </div>
+                </div>
+    }
+}
+
+ReactDOM.render(<MyTable />, document.getElementById('app'))
