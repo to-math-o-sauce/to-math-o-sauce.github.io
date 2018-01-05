@@ -66,7 +66,7 @@ table .pos, table .all, table .last {
 
 img {
   width: 40px;
-  border: 1px solid black
+  border: 1px solid black;
 }
 
 img, .name > a > div {
