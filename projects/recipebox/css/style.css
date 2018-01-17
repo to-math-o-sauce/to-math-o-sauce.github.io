@@ -1,0 +1,228 @@
+@import url("https://fonts.googleapis.com/css?family=Slabo+27px|Dosis");
+#bar {
+  position: fixed;
+  z-index: 1000;
+  box-shadow: 0 1px 15px 0 rgba(0, 0, 0, 0.2);
+  top: 0px;
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  background: white;
+}
+#bar div {
+  display: inline-block;
+  color: black;
+  margin: 5px;
+}
+#bar #appName {
+  flex-grow: 10;
+  font-size: 35px;
+  user-select: none;
+}
+#bar #add, #bar #collapse {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex-grow: 1;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+#bar #add:hover, #bar #collapse:hover {
+  background: #22c1c3;
+  color: white;
+}
+#bar #add:active, #bar #collapse:active {
+  background: #fd8a2d;
+}
+
+body, html {
+  height: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  font-family: "Slabo 27px", serif;
+  background: linear-gradient(224deg, #22c1c3, #fd8a2d);
+  background-size: 500% 500%;
+  -webkit-animation: AnimationName 79s ease infinite;
+  -moz-animation: AnimationName 79s ease infinite;
+  -o-animation: AnimationName 79s ease infinite;
+  animation: AnimationName 79s ease infinite;
+}
+
+#container {
+  padding-top: 65px;
+}
+
+#list {
+  position: relative;
+  margin: auto;
+  padding-bottom: 1px;
+  width: 80vw;
+}
+
+.listBar {
+  background: white;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.listBar .DraftEditor-root {
+  font-size: 40px;
+  width: calc(100% - 60px);
+  display: inline-block;
+}
+
+.delList {
+  width: 40px;
+  float: left;
+  text-align: center;
+  color: #333333;
+}
+
+.collapse {
+  width: 20px;
+  float: right;
+  text-align: center;
+  color: #333333;
+}
+
+.delItem {
+  width: 20px;
+  float: right;
+  text-align: center;
+  color: #333333;
+}
+
+.delList, .collapse, .delItem {
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.i {
+  background: #fff;
+  border: 1px solid #ddd;
+  font-family: "Georgia", serif;
+  font-size: 20px;
+  margin: 10px 10px 0px 10px;
+  padding-right: 7px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.i .DraftEditor-root {
+  display: inline-block;
+  width: calc(100% - 34px);
+  margin: 7px;
+  font-family: Dosis;
+}
+
+.input {
+  background: #fff;
+  border: 1px solid #ddd;
+  font-family: "Georgia", serif;
+  font-size: 20px;
+  margin: 10px;
+  padding-right: 7px;
+}
+.input .DraftEditor-root {
+  display: inline-block;
+  width: 100%;
+  margin: 7px;
+  font-family: Dosis;
+}
+
+.list {
+  background: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px;
+}
+
+.content {
+  max-height: 0px;
+  overflow: hidden;
+  transition: all 0.4s ease-out;
+}
+.content.visible {
+  max-height: 1000px;
+}
+
+@media only screen and (orientation: landscape) {
+  #list {
+    width: 50vw;
+  }
+}
+@media only screen and (max-width: 328px) {
+  #container {
+    padding-top: 110px;
+  }
+}
+.example-enter {
+  opacity: 0;
+  transform: translate(-50px, 50px) rotate(10deg);
+}
+.example-enter.example-enter-active {
+  opacity: 1;
+  transform: rotate(0deg) translate(0px, 0px);
+  transition: all 300ms ease;
+}
+
+.example-leave {
+  opacity: 1;
+  transform: rotate(0deg) translate(0px, 0px);
+  transition: all 300ms ease;
+}
+.example-leave.example-leave-active {
+  opacity: 0;
+  transform: translate(50px, 50px) rotate(10deg);
+}
+
+@-webkit-keyframes AnimationName {
+  0% {
+    background-position: 91% 0%;
+  }
+  50% {
+    background-position: 10% 100%;
+  }
+  100% {
+    background-position: 91% 0%;
+  }
+}
+@-moz-keyframes AnimationName {
+  0% {
+    background-position: 91% 0%;
+  }
+  50% {
+    background-position: 10% 100%;
+  }
+  100% {
+    background-position: 91% 0%;
+  }
+}
+@-o-keyframes AnimationName {
+  0% {
+    background-position: 91% 0%;
+  }
+  50% {
+    background-position: 10% 100%;
+  }
+  100% {
+    background-position: 91% 0%;
+  }
+}
+@keyframes AnimationName {
+  0% {
+    background-position: 91% 0%;
+  }
+  50% {
+    background-position: 10% 100%;
+  }
+  100% {
+    background-position: 91% 0%;
+  }
+}

@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css?family=Slabo+27px|Dosis')
+
+=vertical-align()
+  display: flex
+  flex-direction: row
+  justify-content: center
+  
+=vertical-vertical-align()
+  display: flex
+  justify-content: center
+  flex-direction: column
+
+=a()
+  padding-bottom: 10px
+  max-height: $big-n
+  overflow: hidden
+  
+$item-del-width: 20px
+$list-del-width: 40px
+$collapse-width: 20px
+$big-n: 999999999999999999999999999px
+$duration: 0.5s
+$m-color: #22c1c3
+$s-color: #fd8a2d
+$subtle: #333333
+#bar
+  position: fixed
+  z-index: 1000
+  box-shadow: 0 1px 15px 0 rgba(0, 0, 0, 0.2)
+  top: 0px
+  
+  div
+    display: inline-block
+    color: black
+    margin: 5px
+  #appName
+    flex-grow: 10
+    font-size: 35px
+    user-select: none
+  #add, #collapse
+    +vertical-vertical-align()
+    flex-grow: 1
+    text-align: center
+    cursor: pointer
+    user-select: none
+    transition: all 0.2s
+    //background: cyan
+    &:hover
+      background: $m-color
+      color: white
+    &:active
+      background: $s-color
+    
+    
+  display: flex
+  width: 100%
+  justify-content: space-around
+  background: white
+  
+body, html
+  height: 100%
+  height: 100%
+  margin: 0px
+  padding: 0px
+  //background: linear-gradient(to bottom, #2DB9FF, #BA68C8)
+  //background-attachment: fixed
+  font-family: 'Slabo 27px', serif
+  background: linear-gradient(224deg, $m-color, $s-color)
+  background-size: 500% 500%
+  -webkit-animation: AnimationName 79s ease infinite
+  -moz-animation: AnimationName 79s ease infinite
+  -o-animation: AnimationName 79s ease infinite
+  animation: AnimationName 79s ease infinite
+  
+#container
+  padding-top: 65px
+  
+#list
+  position: relative
+  margin: auto
+  padding-bottom: 1px
+  width: 80vw
+  
+.listBar
+  background: white
+  padding-right: 10px
+  //border-bottom: 1px solid black
+  
+  +vertical-align()
+
+  .DraftEditor-root
+    font-size: 40px
+    width: calc(100% - 60px)
+    display: inline-block
+  
+.delList
+  width: $list-del-width
+  float: left
+  text-align: center
+  color: $subtle
+  
+
+.collapse
+  width: $collapse-width
+  float: right
+  text-align: center
+  color: $subtle
+
+.delItem
+  width: $item-del-width
+  float: right
+  text-align: center
+  color: $subtle
+  
+.delList, .collapse, .delItem
+  //background: yellow
+  font-size: 15px
+  cursor: pointer
+  +vertical-vertical-align()
+  
+.i
+  background: #fff
+  border: 1px solid #ddd
+  font-family: 'Georgia', serif
+  font-size: 20px
+  margin: 10px 10px 0px 10px
+  padding-right: 7px
+  
+  +vertical-align()
+  
+  .DraftEditor-root
+    display: inline-block
+    width: calc(100% - 34px)
+    margin: 7px
+    font-family: Dosis
+    
+.input
+  background: #fff
+  border: 1px solid #ddd
+  font-family: 'Georgia', serif
+  font-size: 20px
+  margin: 10px
+  padding-right: 7px
+  
+  .DraftEditor-root
+    display: inline-block
+    width: 100%
+    margin: 7px
+    font-family: Dosis
+    
+.list
+  background: white
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2)
+  
+  margin-bottom: 15px
+
+  
+// https://jsfiddle.net/fyuh32je/3/
+.content
+  //background: green
+  max-height: 0px
+  overflow: hidden
+  transition: all 0.4s ease-out
+  &.visible
+    max-height: 1000px
+  
+@media only screen and (orientation: landscape)
+  #list
+    width: 50vw
+    
+@media only screen and (max-width: 328px)
+  #container
+    padding-top: 110px
+    
+//Animation stuff
+
+.example-enter
+  opacity: 0
+  transform: translate(-50px, 50px) rotate(10deg)
+  &.example-enter-active
+    opacity: 1
+    transform: rotate(0deg) translate(0px, 0px)
+    transition: all 300ms ease
+
+.example-leave
+  opacity: 1
+  transform: rotate(0deg) translate(0px, 0px)
+  transition: all 300ms ease
+  &.example-leave-active
+    opacity: 0
+    transform: translate(50px, 50px) rotate(10deg)
+    
+@-webkit-keyframes AnimationName
+  0%
+    background-position: 91% 0%
+
+  50%
+    background-position: 10% 100%
+
+  100%
+    background-position: 91% 0%
+
+
+@-moz-keyframes AnimationName
+  0%
+    background-position: 91% 0%
+
+  50%
+    background-position: 10% 100%
+
+  100%
+    background-position: 91% 0%
+
+
+@-o-keyframes AnimationName
+  0%
+    background-position: 91% 0%
+
+  50%
+    background-position: 10% 100%
+
+  100%
+    background-position: 91% 0%
+
+
+@keyframes AnimationName
+  0%
+    background-position: 91% 0%
+
+  50%
+    background-position: 10% 100%
+
+  100%
+    background-position: 91% 0%

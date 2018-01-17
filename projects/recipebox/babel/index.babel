@@ -1,0 +1,357 @@
+const { Editor, EditorState, RichUtils, ContentState } = Draft;
+const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+function key(arr) {
+  return new Date().getTime() + "";
+}
+
+function DraftJSToJSON(obj) {
+  var a = { ...obj };
+  //console.log(a)
+  if (typeof a.name === "object") {
+    a.name = a.name.getCurrentContent().getPlainText();
+  }
+  a.items = a.items.map(x => x.getCurrentContent().getPlainText());
+  a.collapsed = false;
+  return a;
+}
+
+function toDraftJS(str) {
+  return EditorState.createWithContent(ContentState.createFromText(str));
+}
+
+function JSONToDraft(obj) {
+  var a = obj;
+  a.name = toDraftJS(a.name);
+  a.items = a.items.map(x => toDraftJS(x));
+  return a;
+}
+
+function createEmptyWithFocus() {
+  //https://github.com/facebook/draft-js/issues/657
+  const empty = EditorState.createEmpty();
+  return EditorState.moveFocusToEnd(empty);
+}
+
+function getEmoji() {
+  var a = [
+    ["🍇", "Grapes"],
+    ["🍈", "Melon"],
+    ["🍉", "Watermelon"],
+    ["🍊", "Tangerine"],
+    ["🍋", "Lemon"],
+    ["🍌", "Banana"],
+    ["🍍", "Pineapple"],
+    ["🍎", "Red Apple"],
+    ["🍏", "Green Apple"],
+    ["🍐", "Pear"],
+    ["🍑", "Peach"],
+    ["🍒", "Cherries"],
+    ["🍓", "Strawberry"],
+    ["🥝", "Kiwi Fruit"],
+    ["🍅", "Tomato"],
+    ["🥥", "Coconut"],
+    ["🥑", "Avocado"],
+    ["🍆", "Eggplant"],
+    ["🥔", "Potato"],
+    ["🥕", "Carrot"],
+    ["🌽", "Ear of Corn"],
+    ["🌶", "Hot Pepper"],
+    ["🥒", "Cucumber"],
+    ["🥦", "Broccoli"],
+    ["🍄", "Mushroom"],
+    ["🥜", "Peanuts"],
+    ["🌰", "Chestnut"],
+    ["🍞", "Bread"],
+    ["🥖", "Baguette"],
+    ["🧀", "Cheese"],
+    ["🍖", "Meat on Bone"],
+    ["🍗", "Poultry Leg"],
+    ["🥩", "Cut of Meat"],
+    ["🥓", "Bacon"],
+    ["🥫", "Canned Food"],
+    ["🍤", "Shrimp"],
+    ["🍫", "Chocolate Bar"],
+    ["🍬", "Candy"],
+    ["🍯", "Honey"],
+    ["🥛", "Glass of Milk"]
+  ];
+
+  return a[Math.floor(Math.random() * a.length)];
+}
+
+class Content extends React.Component {
+  constructor(props) {
+    super(props);
+    this.determine = this.determine.bind(this);
+  }
+
+  determine() {
+    if (this.props.collapsed === true) {
+      return "content";
+    }
+
+    return "content visible";
+  }
+
+  render() {
+    return <div className={this.determine()}>{this.props.children}</div>;
+  }
+}
+
+class Item extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  sendData(editorState) {
+    this.props.changeHandler(editorState, this.props.id);
+  }
+
+  deleteItself() {
+    this.props.changeHandler("del", this.props.id);
+  }
+
+  render() {
+    return (
+      <div className="i">
+        <Editor
+          editorState={this.props.editorState}
+          onChange={this.sendData.bind(this)}
+        />
+        <div className="delItem" onClick={this.deleteItself.bind(this)}>
+          <i className="fa fa-times-circle" aria-hidden="true" />
+        </div>
+      </div>
+    );
+  }
+}
+
+class MyList extends React.Component {
+  constructor(props) {
+    super(props);
+    //console.log(this.props);
+    this.state = {
+      editorState: EditorState.createEmpty(),
+      emoji: getEmoji()
+    };
+    this.onChange = this.onChange.bind(this);
+    this.input = this.input.bind(this);
+    this.handleReturn = this.handleReturn.bind(this);
+    this.hide = this.hide.bind(this);
+    this.deleteItself = this.deleteItself.bind(this);
+    //onListChange
+  }
+
+  changeHandler(data, key) {
+    this.props.PchangeHandler(data, this.props.id, key);
+  }
+
+  onChange(data) {
+    this.props.onListChange(data, this.props.id, "name");
+  }
+
+  input(editorState) {
+    this.setState({ editorState: editorState });
+  }
+
+  handleReturn() {
+    let { editorState } = this.state;
+    let currentText = editorState
+      .getCurrentContent()
+      .getPlainText()
+      .trim();
+    if (currentText !== "") {
+      var items = this.props.items;
+      items.push(toDraftJS(currentText));
+      //console.log(items)
+      this.props.updateList(items, this.props.id);
+      this.setState({ editorState: createEmptyWithFocus() });
+    }
+    return "handled";
+  }
+
+  hide() {
+    //console.log(this.props.id + " collapsed");
+    this.props.onListChange(!this.props.collapsed, this.props.id, "collapsed");
+  }
+
+  deleteItself() {
+    this.props.updateList("del", this.props.id);
+  }
+
+  renderItems() {
+    return (
+      <div>
+        {this.props.items.map((x, i) => {
+          return (
+            <Item
+              key={i}
+              id={i}
+              changeHandler={this.changeHandler.bind(this)}
+              editorState={x}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
+  render() {
+    const { emoji } = this.state;
+    var placeHolder = "E.g: " + emoji[1] + " " + emoji[0];
+
+    return (
+      <div className="list">
+        <div className="listBar">
+          <div className="delList" onClick={this.deleteItself}>
+            <i className="fa fa-times-circle" aria-hidden="true" />
+          </div>
+          <Editor
+            editorState={this.props.editorState}
+            onChange={this.onChange}
+            placeholder="Untitled"
+          />
+          <div className="collapse" onClick={this.hide}>
+            <i className="fa fa-sort" aria-hidden="true" />
+          </div>
+        </div>
+
+        <Content collapsed={this.props.collapsed}>
+          {this.renderItems()}
+          <div className="input">
+            <Editor
+              editorState={this.state.editorState}
+              onChange={this.input}
+              placeholder={placeHolder}
+              handleReturn={this.handleReturn}
+            />
+          </div>
+        </Content>
+      </div>
+    );
+  }
+}
+
+class Container extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      lists:
+        localStorage.getItem("local") === null
+          ? [
+              JSONToDraft({
+                name: "Cake",
+                items: ["milk", "sugar", "baking powder"],
+                collapsed: false,
+                key: key()
+              })
+            ]
+          : JSON.parse(localStorage.getItem("local")).map(x => JSONToDraft(x))
+    };
+    this.PchangeHandler = this.PchangeHandler.bind(this);
+    this.onListChange = this.onListChange.bind(this);
+    this.addList = this.addList.bind(this);
+    this.collapse = this.collapse.bind(this);
+    this.updateList = this.updateList.bind(this);
+  }
+
+  PchangeHandler(data, list, key) {
+    var myList = this.state.lists;
+    //console.log(data);
+    if (data === "del") {
+      myList[list].items[key] = "";
+      myList[list].items = myList[list].items.filter(x => x !== "");
+    } else {
+      myList[list].items[key] = data;
+    }
+    let local = myList.map(x => DraftJSToJSON(x));
+    //console.log(local)
+
+    localStorage.setItem("local", JSON.stringify(local));
+    this.setState({ lists: myList });
+  }
+
+  onListChange(editorState, id, prop) {
+    var myList = this.state.lists;
+    myList[id][prop] = editorState;
+    //console.log(myList[id][prop]);
+    let local = myList.map(x => DraftJSToJSON(x));
+    localStorage.setItem("local", JSON.stringify(local));
+    this.setState({ lists: myList });
+  }
+
+  addList(event) {
+    event.preventDefault();
+    var myList = this.state.lists;
+    myList.push({
+      name: EditorState.createEmpty(),
+      items: [],
+      collapsed: false,
+      key: key()
+    });
+    let local = myList.map(x => DraftJSToJSON(x));
+    localStorage.setItem("local", JSON.stringify(local));
+    this.setState({ lists: myList });
+  }
+
+  updateList(list, key) {
+    var myList = this.state.lists;
+    if (list === "del") {
+      myList[key] = "";
+      myList = myList.filter(x => x !== "");
+    } else {
+      myList[key].items = list;
+    }
+    let local = myList.map(x => DraftJSToJSON(x));
+    localStorage.setItem("local", JSON.stringify(local));
+    this.setState({ lists: myList });
+  }
+
+  collapse() {
+    var myList = this.state.lists;
+    myList = myList.map(function(x) {
+      let a = x;
+      a.collapsed = true;
+      return a;
+    });
+    this.setState({ lists: myList });
+  }
+
+  render() {
+    return (
+      <div id="container">
+        <div id="bar">
+          <div id="appName">Recipe Box</div>
+          <div id="add" onClick={this.addList}>
+            Add Recipe
+          </div>
+          <div id="collapse" onClick={this.collapse}>
+            Collapse All
+          </div>
+        </div>
+        <div id="list">
+          <ReactCSSTransitionGroup
+            transitionName="example"
+            transitionLeaveTimeout={300}
+            transitionEnterTimeout={300}
+          >
+            {this.state.lists.map((x, i) => (
+              <MyList
+                key={x.key}
+                id={i}
+                items={x.items}
+                editorState={x.name}
+                PchangeHandler={this.PchangeHandler}
+                onListChange={this.onListChange}
+                updateList={this.updateList}
+                collapsed={x.collapsed}
+              />
+            ))}
+          </ReactCSSTransitionGroup>
+        </div>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<Container />, document.getElementById("app"));
