@@ -43,6 +43,7 @@ body, html {
   margin: 0px;
   padding: 0px;
   font-family: "Slabo 27px", serif;
+  background-attachment: fixed;
   background: linear-gradient(224deg, #22c1c3, #fd8a2d);
   background-size: 500% 500%;
   -webkit-animation: AnimationName 79s ease infinite;
