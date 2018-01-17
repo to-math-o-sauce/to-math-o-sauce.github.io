@@ -45,7 +45,7 @@ body, html {
   font-family: "Slabo 27px", serif;
   background-attachment: fixed;
   background: linear-gradient(224deg, #22c1c3, #fd8a2d);
-  background-size: 500% 500%;
+  background-size: 150% 200%;
   //-webkit-animation: AnimationName 79s ease infinite;
   //-moz-animation: AnimationName 79s ease infinite;
   //-o-animation: AnimationName 79s ease infinite;
