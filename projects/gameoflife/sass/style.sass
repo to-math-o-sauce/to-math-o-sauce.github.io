@@ -1,0 +1,124 @@
+$cell-size: 10px
+$border: 1px
+$border-color: #161616
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700|VT323')
+
+body
+  font-family: Open Sans
+  height: 100%
+  width: 100%
+  margin: 0px
+  padding: 0px
+
+td div
+  cursor: pointer
+  margin: 0
+  padding: 0
+  
+.new
+  background: #00e5ff
+.old
+  background: #007fff
+.dead
+  background: black
+  &:hover
+    background: white
+  
+#top
+  background: black
+  color: white
+  margin: auto
+  text-align: center
+  
+#title
+  font-family: VT323
+  font-size: 70px
+  
+table
+  margin: auto
+  border-spacing: 0
+  border-bottom: $border solid $border-color
+  border-right: $border solid $border-color
+  
+td, tr
+  margin: 0
+  padding: 0
+  
+td
+  height: $cell-size
+  width: $cell-size
+  border-top: $border solid $border-color
+  border-left: $border solid $border-color
+  
+#bar
+  user-select: none
+  margin: 5px
+  margin-bottom: 10px
+  
+  .ctrl, .option
+    //width: 100px
+    padding: 3px
+    padding-left: 20px
+    padding-right: 20px
+    display: inline-block
+    font-size: 20px
+    background: black
+    color: white
+    //border-radius: 5px
+    &:hover
+      background: #00e5ff
+      //color: black
+    &:not(:last-child)
+      margin-right: 3px
+    
+  .option
+    position: relative
+    .list div
+      &:hover, &:focus
+        background: #00e5ff
+    &:hover, &:focus 
+      .list
+        display: block
+        
+    
+      
+.list
+  display: none
+  position: absolute
+  background: black
+  width: 100%
+  left: 0
+
+#l
+  padding: 15px
+  
+.big
+  tr
+    td, div
+      height: 6px
+      width: 6px
+.medium
+  tr
+    td, div
+      height: 9px
+      width: 9px
+  
+.small
+  tr
+    td, div
+      height: 13px
+      width: 13px
+  
+#about
+  max-width: 700px
+  margin: auto
+  padding: 0 20px 0 20px
+  
+a, a:visited
+  text-decoration: none
+  color: #007fff
+
+h4
+  color: #cccccc
+  text-align: right

@@ -1,0 +1,365 @@
+const { Component } = React;
+
+function genStatus() {
+  return Math.random() > 0.3 ? 0 : 1;
+}
+
+function genBoard(xgrid, ygrid, callback) {
+  //https://stackoverflow.com/questions/3895478/does-javascript-have-a-method-like-range-to-generate-an-array-based-on-suppl
+  return [...Array(ygrid).keys()].map((x, i) =>
+    [...Array(xgrid).keys()].map((x, j) => callback(j, i))
+  );
+}
+
+function genBoard2(xgrid, ygrid) {
+  //https://stackoverflow.com/questions/3895478/does-javascript-have-a-method-like-range-to-generate-an-array-based-on-suppl
+  return [...Array(ygrid).keys()].map(() => [...Array(xgrid).keys()]);
+}
+
+function mod(n, m) {
+  //https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
+  return (n % m + m) % m;
+}
+
+function Row(props) {
+  return <tr class="row">{props.children}</tr>;
+}
+
+class Cell extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  determine() {
+    this.props.update(this.props.x, this.props.y);
+  }
+
+  colorin(n) {
+    if (n === 0) {
+      return "dead";
+    } else if (n === 1) {
+      return "new";
+    }
+
+    return "old";
+  }
+
+  render() {
+    return (
+      <td>
+        <div
+          onDragEnter={this.determine.bind(this)}
+          onClick={this.determine.bind(this)}
+          className={this.colorin(this.props.state)}
+        />
+      </td>
+    );
+  }
+}
+
+class Container extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      m: {
+        xgrid: 70,
+        ygrid: 50
+      },
+      board: [],
+      pause: false,
+      counter: 0,
+      interval: function() {
+        return null;
+      },
+      sizes: [
+        { xgrid: 50, ygrid: 30, class: "small" },
+        { xgrid: 70, ygrid: 50, class: "medium" },
+        { xgrid: 100, ygrid: 80, class: "big" }
+      ],
+      speed: [
+        { n: "Slow", v: 190 },
+        { n: "Medium", v: 120 },
+        { n: "Fast", v: 50 }
+      ],
+      boardsize: "medium",
+      extraSettings: [2, 3, 3]
+    };
+    this.update = this.update.bind(this);
+    this.process = this.process.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+  }
+
+  componentWillMount() {
+    this.setState({
+      m: this.state.m,
+      board: genBoard(this.state.m.xgrid, this.state.m.ygrid, genStatus),
+      pause: false
+    });
+  }
+
+  componentDidMount() {
+    var interval = setInterval(this.test.bind(this), this.state.speed[1].v);
+    this.setState({ interval: interval });
+  }
+
+  test() {
+    if (this.state.pause !== true) {
+      this.setState({
+        m: this.state.m,
+        board: this.process(this.state.board),
+        pause: this.state.pause,
+        counter: this.state.counter + 1
+      });
+    }
+  }
+
+  update(x, y) {
+    const { board, pause, m } = this.state;
+    if (board[y][x] === 0) {
+      board[y][x] = 1;
+    } else {
+      board[y][x] = 0;
+    }
+
+    this.setState({
+      m: m,
+      board: board,
+      pause: pause
+    });
+  }
+
+  process(arr) {
+    var y = arr.length;
+    var x = arr[0].length;
+    var arr2 = genBoard2(x, y);
+
+    for (var i = 0; i < y; i++) {
+      for (var j = 0; j < x; j++) {
+        let vi = [i, i + 1, i - 1].map(k => mod(k, y));
+        let vj = [j, j + 1, j - 1].map(k => mod(k, x));
+
+        var val = [
+          arr[vi[0]][vj[1]],
+          arr[vi[0]][vj[2]],
+          arr[vi[1]][vj[0]],
+          arr[vi[1]][vj[1]],
+          arr[vi[1]][vj[2]],
+          arr[vi[2]][vj[0]],
+          arr[vi[2]][vj[1]],
+          arr[vi[2]][vj[2]]
+        ]
+          .map(x => (x === 2 ? 1 : x))
+          .reduce((x, y) => x + y);
+
+        if (arr[i][j] === 0) {
+          if (val === this.state.extraSettings[2]) {
+            arr2[i][j] = 1;
+          } else {
+            arr2[i][j] = 0;
+          }
+        } else {
+          if (
+            val < this.state.extraSettings[0] ||
+            val > this.state.extraSettings[1]
+          ) {
+            arr2[i][j] = 0;
+          } else {
+            arr2[i][j] = 2;
+          }
+        }
+      }
+    }
+
+    return arr2;
+  }
+
+  handleSelect(n) {
+    return function(e) {
+      var s = this.state.extraSettings;
+      s[n] = Number(e.target.value);
+      this.setState({ extraSettings: s });
+    }.bind(this);
+  }
+
+  render() {
+    const { m, pause, board, counter, interval, sizes, speed } = this.state;
+
+    return (
+      <div>
+        <div id="top">
+          <div id="title">John Conway's Game of Life</div>
+
+          <div id="bar">
+            <div
+              className="ctrl"
+              onClick={() =>
+                this.setState({
+                  pause: !pause
+                })
+              }
+            >
+              {pause ? "Play" : "Pause"}
+            </div>
+            <div
+              className="ctrl"
+              onClick={() =>
+                this.setState({
+                  board: this.process(board),
+                  pause: true,
+                  counter: counter + 1
+                })
+              }
+            >
+              Next
+            </div>
+            <div
+              className="ctrl"
+              onClick={() =>
+                this.setState({
+                  board: genBoard(m.xgrid, m.ygrid, () => 0),
+                  pause: true,
+                  counter: 0
+                })
+              }
+            >
+              Clear
+            </div>
+            <div
+              className="ctrl"
+              onClick={() =>
+                this.setState({
+                  board: genBoard(m.xgrid, m.ygrid, genStatus),
+                  pause: true,
+                  counter: 0
+                })
+              }
+            >
+              Reset
+            </div>
+            <div className="option">
+              <div>Speed</div>
+              <div className="list hidden">
+                {speed.map(x => (
+                  <div
+                    onClick={function() {
+                      clearInterval(this.state.interval);
+                      this.setState({
+                        interval: setInterval(this.test.bind(this), x.v)
+                      });
+                    }.bind(this)}
+                  >
+                    {x.n}
+                  </div>
+                ))}
+              </div>
+              <div className="list hidden" />
+            </div>
+            <div className="option">
+              <div>Board Size</div>
+              <div className="list hidden">
+                {sizes.map(x => (
+                  <div
+                    onClick={() =>
+                      this.setState({
+                        m: x,
+                        board: genBoard(x.xgrid, x.ygrid, genStatus),
+                        pause: true,
+                        boardsize: x.class
+                      })
+                    }
+                  >
+                    {x.xgrid + " x " + x.ygrid}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div id="more">
+            <table className={this.state.boardsize}>
+              {board.map((y, i) => (
+                <Row>
+                  {y.map((x, j) => (
+                    <Cell y={i} x={j} update={this.update} state={x} />
+                  ))}
+                </Row>
+              ))}
+            </table>
+            <div id="l">
+              <div>Generations:{" " + counter} </div>
+            </div>
+          </div>
+        </div>
+        <div id="about">
+          <h1>
+            According to{" "}
+            <a
+              href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"
+              target="_blank"
+            >
+              Wikipedia
+            </a>
+          </h1>
+          <p>
+            The universe of the Game of Life is an infinite two-dimensional
+            orthogonal grid of square cells, each of which is in one of two
+            possible states, alive or dead, or "populated" or "unpopulated".
+            Every cell interacts with its eight neighbours, which are the cells
+            that are horizontally, vertically, or diagonally adjacent. At each
+            step in time, the following transitions occur:
+          </p>
+          <ul>
+            <li>
+              Any live cell with fewer than{" "}
+              <select
+                value={this.state.extraSettings[0] + ""}
+                onChange={this.handleSelect(0)}
+              >
+                {" "}
+                {[...Array(10).keys()].map(x => (
+                  <option value={x + ""}>{x}</option>
+                ))}
+              </select>{" "}
+              live neighbours dies, as if caused by underpopulation.
+            </li>
+            <li>
+              Any live cell with two or three live neighbours lives on to the
+              next generation.
+            </li>
+            <li>
+              Any live cell with more than{" "}
+              <select
+                value={this.state.extraSettings[1] + ""}
+                onChange={this.handleSelect(1)}
+              >
+                {" "}
+                {[...Array(10).keys()].map(x => (
+                  <option value={x + ""}>{x}</option>
+                ))}
+              </select>{" "}
+              live neighbours dies, as if by overpopulation.
+            </li>
+            <li>
+              Any dead cell with exactly{" "}
+              <select
+                value={this.state.extraSettings[2] + ""}
+                onChange={this.handleSelect(2)}
+              >
+                {" "}
+                {[...Array(10).keys()].map(x => (
+                  <option value={x + ""}>{x}</option>
+                ))}
+              </select>{" "}
+              live neighbours becomes a live cell, as if by reproduction.
+            </li>
+          </ul>
+          <h4>
+            Ptsss... you can play with the rules
+          </h4>
+        </div>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<Container />, document.getElementById("app"));
