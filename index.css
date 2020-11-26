@@ -16,6 +16,32 @@ salmon: e94560
     color: #e94560;
 }
 
+#projects {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#container {
+    padding: 40px;
+}
+
+.project {
+    background-color: #0f3460;
+    max-width: fit-content;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.project img {
+    max-height: calc(30vh - 80px);
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
 @font-face {
     font-family: Cascadia;
     src:url("/fonts/CascadiaCode.ttf");

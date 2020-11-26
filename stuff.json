@@ -1,3 +1,14 @@
 {
-    "test": "hello world"
+    "projects": [
+        {
+            "title": "Recipebox",
+            "url": "https://tomathosauce.github.io/projects/recipebox/",
+            "thumbnail": "/images/recipebox.png"
+        },
+        {
+            "title": "Game of life",
+            "url": "https://tomathosauce.github.io/projects/gameoflife/",
+            "thumbnail": "/images/gameoflife.png"
+        }
+    ]
 }

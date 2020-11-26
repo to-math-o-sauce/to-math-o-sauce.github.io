@@ -2,18 +2,19 @@
 <html>
     <head>
         <link rel="stylesheet" href="index.css">
-        <script>
-            fetch('/stuff.json')
-                .then(response => response.text())
-                .then((data) => {
-                    console.log(JSON.parse(data))
-                })
-        </script>
+        <script src="index.js"></script>
     </head>
     <body>
-        <h1 id="main-title">Chi San Fung</h1>
-        <p>I'm hosted with GitHub Pages.</p>
+        <div id="container">
+            <h1 id="main-title">Chi San Fung</h1>
+            <hr>
+            <p>My projects:</p>
+            <div id="projects">
+
+            </div>
+        </div>
+        
     </body>
-    <script src="index.js">
+    
     </script>
 </html>
