@@ -1,3 +1,22 @@
 body {
+    font-family: Cascadia;
+    background-color: #1a1a2e;
+    color: white;
+}
 
+/*
+colors
+darkest blue: 1a1a2e
+darker blue: 16213e
+blue: 0f3460
+salmon: e94560
+*/
+
+#main-title {
+    color: #e94560;
+}
+
+@font-face {
+    font-family: Cascadia;
+    src:url("/fonts/CascadiaCode.ttf");
 }
